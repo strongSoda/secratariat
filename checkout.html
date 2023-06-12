@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Checkout | Buy UGC on Syncy</title>
+  <link href="images/favicon.png" rel="shortcut icon" type="image/x-icon">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+
+  <style>
+    body {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- syncy logo -->
+  <div style="text-align: center">
+    <img src="images/logo.png" alt="Syncy Logo" width="100">
+  </div>
+  <article>
+    <header>
+      <h1>Checkout</h1>
+      <p>Your email: <span id="email"></span></p>
+    </header>
+  <form>
+    <label for="details">Content Details</label>
+    <small>Write some details about what post you want and mention specifics like your product, format etc.</small>
+    <textarea name="details" id="details" cols="30" rows="10" required></textarea>
+
+    <label for="script">Script</label>
+    <small>If you have a script for the content please include it here.</small>
+    <textarea name="script" id="script" cols="30" rows="10"></textarea>
+
+    <label for="assets">Copy or Media</label>
+    <small>Attach the text of the post or assets such as Links, Images, Videos etc.</small>
+    <textarea name="assets" id="assets" cols="30" rows="10"></textarea>
+
+    <footer>
+      <input type="submit" value="Proceed to Pay" class="contrast" id="book">
+    </footer>
+  </form>
+  </article>
+
+  <script>
+    // get the values from the url
+    const urlParams = new URLSearchParams(window.location.search);
+    const email = urlParams.get('email');
+    const deliverable = urlParams.get('deliverable');
+    
+    // set email in the page
+    const emailEl = document.querySelector('#email');
+    emailEl.textContent = email;
+
+    // get form data
+    const form = document.querySelector('form');
+    
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // add loading element to the submit button
+      document.querySelector("#book").value = "Loading...";
+      document.querySelector("#book").disabled = true;
+
+      const details = document.querySelector('#details').value;
+      const script = document.querySelector('#script').value;
+      const copy = document.querySelector('#assets').value;
+
+      // send data to server
+      fetch('https://syncy-backend.onrender.com/book-content-pack/' + deliverable, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          'userEmail': email,
+          details,
+          "contentScript": script,
+          copy
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data)
+        // check for status and log message
+        if (data.status === 'success') {
+          console.log('success')
+          createCheckoutSession(data?.body?.booking?.id).then(function(data) {
+            console.log(data)
+            if (data?.status === 'fail') {
+              // show error message
+              const error = document.createElement('p');
+              error.textContent = data.message;
+              error.classList.add('error');
+              form.appendChild(error);
+            } else {
+              window.location.href = data?.body?.url;
+            }
+          });
+        } else {
+          console.log('error')
+
+          // show error message
+          const error = document.createElement('p');
+          error.textContent = data.message;
+          error.classList.add('error');
+          form.appendChild(error);
+        }
+      })
+      .catch(err => {
+        console.log(err)        
+      });
+    });
+
+    function createCheckoutSession(booking_id) {
+      return fetch("https://syncy-backend.onrender.com/create-public-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          bookingId: booking_id,
+          userEmail: email
+        })
+      }).then(function(result) {
+        return result.json();
+      });
+    }
+  </script>
+</body>
+</html>

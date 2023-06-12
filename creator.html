@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Buy UGC on Syncy</title>
+    <link href="images/favicon.png" rel="shortcut icon" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montez&family=Montserrat:ital,wght@0,500;0,700;0,900;1,500;1,700&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: Raleway;
+            padding: 1em;
+            word-wrap: break-word;
+            /* overflow: hidden; */
+        }
+
+        /* loading spinner animation */
+        #loading {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #loading::after {
+            content: "";
+            display: block;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            width: 50px;
+            height: 50px;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+
+        .creator {
+            visibility: hidden;
+        }
+
+        .creator-profile, .portfolio, .instagram, #deliverables {
+            min-height: 100vh;
+            width: 100vw;
+            text-align: center;
+            background: radial-gradient(103.29% 115.12% at 19.13% 14.58%, rgba(255, 99, 239, 0.14) 0%, rgba(255, 99, 239, 0) 100%), #141414;
+            color: #fff;
+
+            position: absolute;
+            top: 0;
+            left: 0;
+            /* overflow: auto; */
+        }
+
+        .portfolio, .instagram, #deliverables {
+            display: none;
+        }
+        
+        .creator-profile {
+            background: radial-gradient(112.92% 132.13% at 19.24% 17.53%, rgba(104, 91, 255, 0.24) 0%, rgba(84, 73, 218, 0) 100%), #141414;
+            padding: 2em;
+        }
+        .creator-profile h2 {
+            width: fit-content;
+            font-style: normal;
+            font-weight: 800;
+            font-size: 52px;
+            line-height: 87px;
+            letter-spacing: -0.02em;
+            font-feature-settings: "pnum" on, "lnum" on;
+            background: -webkit-linear-gradient(45deg, rgba(255, 99, 239, 1), rgba(25, 19, 239, 1));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+
+            font-family: Montserrat;
+
+            margin: 0 auto;
+        }
+        div h1 {
+            font-family: Raleway;
+            font-style: normal;
+            font-weight: 800;
+            font-size: 72px;
+            line-height: 87px;
+            letter-spacing: -0.02em;
+            font-feature-settings: "pnum" on, "lnum" on;
+            background: -webkit-linear-gradient(45deg, rgba(95, 19, 139, 111), rgba(225, 19, 139, 211));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            word-wrap: break-word;
+            line-break: auto;
+
+        }
+        .profile-picture {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .username, .bio {
+            color: #fff;
+        }
+
+        .username {
+            font-family: Montez;
+        }
+
+        #deliverables, .portfolio, .instagram {
+            height: fit-content;
+            /* background-color: #3498db; */
+            overflow: auto;
+            padding: 2em;
+            /* margin: 2em; */
+        }
+        .deliverables {
+            /* overflow: auto; */
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+        }
+
+        .deliverable {
+            /* min-width: 30vw; */
+            text-align: center;
+            width: 30vw;
+
+            /* background: radial-gradient(103.29% 115.12% at 19.13% 14.58%, rgba(255, 255, 0, 0.14) 0%, rgba(255, 255, 0, 0) 100%), #141414; */
+        }
+
+        iframe {
+            background-image: url("https://media.tenor.com/wpSo-8CrXqUAAAAi/loading-loading-forever.gif");   
+            background-repeat: no-repeat;
+            background-size: 10%;
+            margin: 0 auto;
+            background-position: center;
+
+            position: absolute;
+            left: 0px;
+            top: 60px;
+            width: 100%;
+            height: 100%;
+
+            /* width: 100%; */
+            /* height: fit-content; */
+            /* height: 65vh; */
+        }
+
+        .buttons {
+            /* display: flex; */
+            /* justify-content: space-evenly; */
+            /* align-items: center; */
+        }
+
+        .button {
+            width: 20vw;
+            margin: 0 auto;
+            margin-bottom: 10px;
+            padding: .4em 1em;
+            border-radius: 5px;
+            border: none;
+            /* border: 1px solid #000; */
+            /* button has gradient background */
+            background: linear-gradient(45deg, rgba(236, 109, 59, 1), rgba(186, 75, 225, 1));
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.2s ease-in-out;
+        }
+
+        @media screen and (max-width: 992px) {
+            .button {
+                width: 80vw;
+            }
+            .deliverables {
+                display: block;
+            }
+            .deliverable {
+                width: 80vw;
+            }
+            div h1 {
+                font-size: 48px;
+            }
+        }
+
+        .powered-by {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #141414;
+            color: #fff;
+            text-align: center;
+            padding: 1em;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loading">
+    </div>
+
+    <!-- syncy logo -->
+    <div style="text-align: center">
+        <img src="images/logo.png" alt="Syncy Logo" width="100">
+    </div>
+    <div class="creator">
+        <div class="creator-profile">
+        </div>
+
+        <div id="deliverables">
+            <!-- back button that sets display to none  -->
+            <div style="text-align: left">
+                <a href="#" class="button" onClick="document.getElementById('deliverables').style.display = 'none';">
+                    Back
+                </a>
+            </div>
+            <h1>My Content Deliverables</h1>
+            <div class="deliverables">
+            </div>
+        </div>
+
+        <div class="portfolio" id="portfolio">
+            <!-- back button that sets display to none  -->
+            <div style="text-align: left">
+                <a href="#" class="button" onClick="document.getElementById('portfolio').style.display = 'none';">
+                    Back
+                </a>
+            </div>
+            <h1>My Portfolio</h1>
+        </div>
+
+        <div class="instagram" id="instagram">
+            <!-- back button that sets display to none  -->
+            <div style="text-align: left">
+                <a href="#" class="button" onClick="document.getElementById('instagram').style.display = 'none';">
+                    Back
+                </a>
+            </div>
+            <h1>My Instagram</h1>
+        </div>
+
+        <footer class="powered-by">
+            <p>Powered by 
+                <a href="https://syncy.net" target="_blank" style="color: #fff; text-decoration: none">
+                    Syncy
+                </a>
+            </p>
+        </footer>
+
+
+
+        <!-- Modal -->
+        <dialog id="modal-example">
+            <article style="min-width: 400px">
+                <header>
+                    <a href="#close" aria-label="Close" class="close" data-target="modal-example" onClick="toggleModal(event)">
+                    </a>
+                    <h3 class="modal-title">Order</h3>
+                </header>
+                <label for="email-input">Email address *</label>
+                <input type="text" placeholder="Enter your email address" class="email-input" required autofocus>
+                <footer>
+                    <!-- <a href="#cancel" role="button" class="secondary" data-target="modal-example" onClick="toggleModal(event)">
+                        Cancel
+                    </a> -->
+                    <button id="confirm" class="contrast" role="button" data-target="modal-example" onClick="startOrder(event)">
+                        Next 👉
+                    </button>
+                </footer>
+            </article>
+        </dialog>
+    </div>
+
+    <script>
+        // get the username from the url and store it in a variable
+        let username = window.location.search.split("=")[1];
+        // get the element with the id of "username" and set its innerHTML to the username
+
+        const themes = [
+                {
+                    "background": "radial-gradient(112.92% 132.13% at 19.24% 17.53%, rgba(104, 91, 255, 0.24) 0%, rgba(84, 73, 218, 0) 100%), #141414;",
+                    "color": "linear-gradient(45deg, rgba(236, 109, 59, 1), rgba(186, 75, 225, 1));",
+                    "button": "linear-gradient(45deg, rgba(236, 109, 59, 1), rgba(186, 75, 225, 1));"
+                }
+            ]
+
+        function fetchCreator() {
+            // fetch the creator from the api
+            fetch("https://syncy-backend.onrender.com/influencer-public-profile/" + username)
+                .then(response => response.json())
+                .then(data => {
+                    // log the data to the console
+                    console.log(data);
+                    if (data?.status === "success") {
+                        renderProfile(data?.body?.influencer);
+                        renderDeliverables(data?.body?.contentpacks, data?.body?.influencer?.instagram_username);
+                    } else {
+                        document.getElementById("username").innerHTML = "User not found";
+                    }
+                }).finally(() => {
+                    // remove the loading message
+                    document.getElementById("loading").remove();
+                    // set the deliverables height to 100vh
+                    document.querySelector(".deliverables").style.height = "100vh";
+                    // set the creator visibility to visible
+                    document.querySelector(".creator").style.visibility = "visible";
+                });
+        }
+
+        function renderProfile(creator) {
+            // get the element with the class of "creator-profile"
+            let profile = document.querySelector(".creator-profile");
+            // create elements to set name from first and last name, username, followers, profile picture, bio
+            let name = document.createElement("h2");
+            let username = document.createElement("p");
+            let followers = document.createElement("small");
+            let profilePicture = document.createElement("img");
+            let bio = document.createElement("p");
+
+            // set the innerHTML of the elements to the data from the creator object
+            name.innerHTML = creator?.first_name + " " + creator?.last_name;
+            username.innerHTML = '@' + creator?.instagram_username.replace('@', '');
+            followers.innerHTML = formatNumber(creator?.followers_count) + ' Followers';
+            profilePicture.src = creator?.image_url;
+            // remove any url from the bio
+            // creator?.bio = creator?.bio.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '');
+            bio.innerHTML = creator?.bio.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '');
+
+            // add classes to the elements
+            name.classList.add("name");
+            username.classList.add("username");
+            followers.classList.add("followers");
+            profilePicture.classList.add("profile-picture");
+            bio.classList.add("bio");
+
+            // create a header element
+            let header = document.createElement("header");
+            // append profile picture to header
+            header.appendChild(profilePicture);
+
+            // create and append instagfram icon as a link to profile to header
+            let instagramIcon = document.createElement("a");
+            instagramIcon.href = "https://www.instagram.com/" + creator?.instagram_username;
+            instagramIcon.target = "_blank";
+            let instagramIconImage = document.createElement("img");
+            instagramIconImage.src = "/images/instagram_logo.jpeg";
+            instagramIconImage.style.width = "30px";
+            instagramIcon.appendChild(instagramIconImage);
+
+            // create a div element to hold the instagram icon
+            let instagramIconDiv = document.createElement("div");
+            instagramIconDiv.classList.add("instagram-icon");
+
+            // append the instagram icon to the div
+            instagramIconDiv.appendChild(instagramIcon);
+
+            // header.appendChild(instagramIconDiv);
+
+            // append the elements to the profile element
+            profile.appendChild(header);
+            profile.appendChild(name);
+            profile.appendChild(username);
+            profile.appendChild(followers);
+            profile.appendChild(bio);
+
+            // create and append a div of 3 links as buttons in a row to the profile element
+            // button 1: Order Content (#deliverables), button 2: See Portfolio (#portfolio), button 3: See Instagram (#instagram)
+            let buttons = document.createElement("div");
+            buttons.classList.add("buttons");
+
+            // create and append button 1
+            let button1 = document.createElement("button");
+            button1.innerHTML = "Order UGC Content";
+            button1.classList.add("button");
+            button1.classList.add("contrast");
+            button1.classList.add("order-button");
+            button1.onclick = () => {
+                // set #deliverables to block
+                document.getElementById("deliverables").style.display = "block"; 
+            };
+
+
+            // create and append button 2
+            let button2 = document.createElement("button");
+            button2.innerHTML = "See Portfolio";
+            button2.classList.add("button");
+            button2.classList.add("contrast");
+            button2.classList.add("portfolio-button");
+            button2.onclick = () => {
+                if(creator?.portfolio_url.includes("canva") || creator?.portfolio_url.includes("triciaredulla.com") || creator?.portfolio_url.includes("socialsbysam.net")) {
+                    window.open(creator?.portfolio_url, "_blank");
+                } else {
+                    // set #portfolio to block
+                    document.getElementById("portfolio").style.display = "block"; 
+                }
+            };
+
+            // create and append button 3
+            let button3 = document.createElement("button");
+            button3.innerHTML = "See Instagram";
+            button3.classList.add("button");
+            button3.classList.add("contrast");
+            button3.classList.add("instagram-button");
+            button3.onclick = () => {
+                // set #instagram to block
+                document.getElementById("instagram").style.display = "block"; 
+            };
+
+
+            // append the buttons to the buttons div
+            buttons.appendChild(button1);
+
+            if(creator?.portfolio_url !== 'None') {
+                buttons.appendChild(button2);
+            }
+            buttons.appendChild(button3);
+
+            // append the buttons div to the profile element
+            profile.appendChild(buttons);
+            
+            // select a random theme
+            const theme = themes[0];
+
+            console.log(theme);
+
+            // set the background color of the profile element to the theme's background color
+            profile.style.background = theme.background;
+
+            // set the color of the buttons to the theme's color
+            button1.style.background = theme.button;
+            button2.style.background = theme.button;
+            button3.style.background = theme.button;
+
+
+
+
+            
+            // create an iframe to display the creator's instagram feed
+            let instagramFeed = document.createElement("iframe");
+            instagramFeed.src = "https://www.instagram.com/" + creator?.instagram_username?.replace('@', '') + "/embed";
+            instagramFeed.frameBorder = "0";
+            instagramFeed.scrolling = "yes";
+            instagramFeed.allowTransparency = "true";
+            instagramFeed.allow = "encrypted-media";
+            // instagramFeed.height = "800px";
+            // instagramFeed.width = "100%";
+            instagramFeed.style.marginTop = "20px";
+            // instagramFeed.style.border = "10px solid #000";
+            
+            
+            
+            // append the instagram feed to the profile element
+            // profile.appendChild(instagramFeed);
+            
+            // create a footer element
+            // let footer = document.createElement("footer");
+            // append bio to footer
+            // footer.appendChild(instagramFeed);
+
+            // append the footer to the instagram element
+            const instagram = document.querySelector(".instagram");
+            instagram.appendChild(instagramFeed);
+
+
+            // create an iframe to display the creator's portfolio website
+            let portfolio = document.createElement("iframe");
+            portfolio.src = creator?.portfolio_url;
+            portfolio.frameBorder = "0";
+            portfolio.scrolling = "yes";
+            portfolio.allowTransparency = "true";
+            portfolio.allow = "encrypted-media";
+            portfolio.allowFullscreen = "true";
+            portfolio.style.marginTop = "20px";
+            // portfolio.style.border = "10px solid #000";
+
+            // append the portfolio to the portfolio element
+            const portfolioElement = document.querySelector(".portfolio");
+            portfolioElement.appendChild(portfolio);
+
+
+            // update the title of the page
+            document.title = creator?.first_name + " " + creator?.last_name + " | Syncy";
+            // update the description of the page
+            // document.querySelector('meta[name="description"]').setAttribute("content", "Order UGC from " + creator?.first_name + " " + creator?.last_name + " on Syncy.");
+            // update the image of the page
+            // document.querySelector('meta[property="og:image"]').setAttribute("content", creator?.image_url);
+            // update meta tags
+            // document.querySelector('meta[property="og:title"]').setAttribute("content", creator?.first_name + " " + creator?.last_name + " | Syncy");
+            // document.querySelector('meta[property="og:description"]').setAttribute("content", "Order UGC from " + creator?.first_name + " " + creator?.last_name + " on Syncy.");
+            // document.querySelector('meta[property="og:url"]').setAttribute("content", "https://syncy.net/creator?username=" + creator?.instagram_username);
+
+            // update twitter meta tags
+            // document.querySelector('meta[name="twitter:title"]').setAttribute("content", creator?.first_name + " " + creator?.last_name + " | Syncy");
+            // document.querySelector('meta[name="twitter:description"]').setAttribute("content", "Order UGC from " + creator?.first_name + " " + creator?.last_name + " on Syncy.");
+            // document.querySelector('meta[name="twitter:image"]').setAttribute("content", creator?.image_url);
+            // document.querySelector('meta[name="twitter:card"]').setAttribute("content", "summary_large_image");
+
+        }
+
+        function renderDeliverables(deliverables, username) {
+            // get the element with the class of "deliverables"
+            let deliverablesElement = document.querySelector(".deliverables");
+
+            // loop through the deliverables
+            deliverables.forEach(deliverable => {
+                // create a div element to hold the deliverable
+                let deliverableElement = document.createElement("article");
+                // create a h3 element to hold the deliverable title
+                let deliverableTitle = document.createElement("h3");
+                // create a p element to hold the deliverable description
+                let deliverableDescription = document.createElement("p");
+                // create a h4 element to hold the deliverable price
+                let deliverablePrice = document.createElement("h4");
+                // create a p element to hold the deliverable delivery time
+                let deliverableDeliveryTime = document.createElement("p");
+                // create a p element to hold the deliverable platform
+                let deliverablePlatform = document.createElement("p");
+                // create a button element to hold the deliverable button
+                let deliverableButton = document.createElement("button");
+
+                // set the innerHTML of the elements to the data from the deliverable object
+                deliverableTitle.innerHTML = deliverable?.title;
+                deliverableDescription.innerHTML = deliverable?.description;
+                deliverablePrice.innerHTML = '$' + deliverable?.price;
+                deliverableDeliveryTime.innerHTML = 'Delivery in ' + deliverable?.delivery + ' days';
+                deliverablePlatform.innerHTML = deliverable?.platform;
+                deliverableButton.innerHTML = "Order Now";
+
+                // add attributes to the button
+                deliverableButton.setAttribute("data-target", "modal-example");
+                deliverableButton.setAttribute("data-toggle", "modal");
+
+
+                // add an event listener to the button to open the modal when clicked
+                deliverableButton.addEventListener("click", (e) => {
+                    window.location.href = "https://app.syncy.net/brand/register?influencers%5Bquery%5D=" + username + "#deliverable-" + deliverable?.id;
+                    // toggleModal(e, deliverable);
+                });
+
+                // add classes to the elements
+                deliverableElement.classList.add("deliverable");
+                deliverableTitle.classList.add("deliverable-title");
+                deliverableDescription.classList.add("deliverable-description");
+                deliverablePrice.classList.add("deliverable-price");
+                deliverableDeliveryTime.classList.add("deliverable-delivery-time");
+                deliverablePlatform.classList.add("deliverable-platform");
+                deliverableButton.classList.add("deliverable-button");
+                deliverableButton.classList.add("contrast");
+
+                // create a footer element
+                let footer = document.createElement("footer");
+
+                // append the elements to the deliverable element
+                deliverableElement.appendChild(deliverablePlatform);
+                deliverableElement.appendChild(deliverableTitle);
+                deliverableElement.appendChild(deliverablePrice);
+                deliverableElement.appendChild(deliverableButton);
+                deliverableElement.appendChild(deliverableDeliveryTime);
+
+                footer.appendChild(deliverableDescription);
+                // append the footer to the deliverable element
+                deliverableElement.appendChild(footer);
+
+                // append the deliverable element to the deliverables element
+                deliverablesElement.appendChild(deliverableElement);
+
+            });
+        }
+
+
+        fetchCreator();
+
+        function startOrder() {
+            // get the email from the input
+            let email = document.querySelector(".email-input").value;
+
+            // add loading element to the button
+            document.querySelector("#confirm").innerHTML = "Loading...";
+            document.querySelector("#confirm").disabled = true;
+
+            // call api /brand_user_profile_exists
+            fetch('https://syncy-backend.onrender.com/brand_user_profile_exists?email=' + email)
+                .then(response => response.json())
+                .then(data => {
+                    if (data?.status === "fail") {
+                        // if the api call fails, show an error message
+                        document.querySelector("#error-message").innerHTML = data?.message;
+                    } else if (data?.status === "success") {
+                        // if the user exists, redirect to checkout page
+                        window.location.href = "/checkout.html?email=" + email + "&deliverable=" + localStorage.getItem("deliverable_id");
+                    }
+                });
+        }
+
+        function formatNumber(number) {
+            // given a number return it in format of k, m, b, t.
+            let formattedNumber = number;
+            if (number >= 1000 && number < 1000000) {
+                formattedNumber = (number / 1000).toFixed(1) + 'k';
+            } else if (number >= 1000000 && number < 1000000000) {
+                formattedNumber = (number / 1000000).toFixed(1) + 'm';
+            } else if (number >= 1000000000 && number < 1000000000000) {
+                formattedNumber = (number / 1000000000).toFixed(1) + 'b';
+            } else if (number >= 1000000000000) {
+                formattedNumber = (number / 1000000000000).toFixed(1) + 't';
+            }
+
+            // If formatted number is a decimal with a .0, remove the .0
+            if (formattedNumber.includes('.0')) {
+                formattedNumber = formattedNumber.replace('.0', '');
+            }
+
+            return formattedNumber;
+        }
+
+        // Config
+        const isOpenClass = "modal-is-open";
+        const openingClass = "modal-is-opening";
+        const closingClass = "modal-is-closing";
+        const animationDuration = 400; // ms
+        let visibleModal = null;
+        
+        function toggleModal(e, deliverable) {
+            e.preventDefault();
+            // set the deliverable id in the local storage
+            localStorage.setItem("deliverable_id", deliverable?.id);
+            const modal = document.getElementById(event.currentTarget.getAttribute("data-target"));
+            typeof modal != "undefined" && modal != null && isModalOpen(modal)
+                ? closeModal(modal)
+                : openModal(modal);
+        }
+        
+        // Is modal open
+        const isModalOpen = (modal) => {
+            return modal.hasAttribute("open") && modal.getAttribute("open") != "false" ? true : false;
+        };
+
+        // Open modal
+        const openModal = (modal) => {
+            if (isScrollbarVisible()) {
+                document.documentElement.style.setProperty("--scrollbar-width", `${getScrollbarWidth()}px`);
+            }
+            document.documentElement.classList.add(isOpenClass, openingClass);
+            setTimeout(() => {
+                visibleModal = modal;
+                document.documentElement.classList.remove(openingClass);
+            }, animationDuration);
+            modal.setAttribute("open", true);
+        };
+
+        // Close modal
+        const closeModal = (modal) => {
+            visibleModal = null;
+            document.documentElement.classList.add(closingClass);
+            setTimeout(() => {
+                document.documentElement.classList.remove(closingClass, isOpenClass);
+                document.documentElement.style.removeProperty("--scrollbar-width");
+                modal.removeAttribute("open");
+            }, animationDuration);
+        };
+
+        // Close with a click outside
+        document.addEventListener("click", (event) => {
+            if (visibleModal != null) {
+                const modalContent = visibleModal.querySelector("article");
+                const isClickInside = modalContent.contains(event.target);
+                !isClickInside && closeModal(visibleModal);
+            }
+        });
+
+        // Close with Esc key
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && visibleModal != null) {
+                closeModal(visibleModal);
+            }
+        });
+
+        // Get scrollbar width
+        const getScrollbarWidth = () => {
+            // Creating invisible container
+            const outer = document.createElement("div");
+            outer.style.visibility = "hidden";
+            outer.style.overflow = "scroll"; // forcing scrollbar to appear
+            outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
+            document.body.appendChild(outer);
+
+            // Creating inner element and placing it in the container
+            const inner = document.createElement("div");
+            outer.appendChild(inner);
+
+            // Calculating difference between container's full width and the child width
+            const scrollbarWidth = outer.offsetWidth - inner.offsetWidth;
+
+            // Removing temporary elements from the DOM
+            outer.parentNode.removeChild(outer);
+
+            return scrollbarWidth;
+        };
+
+        // Is scrollbar visible
+        const isScrollbarVisible = () => {
+            return document.body.scrollHeight > screen.height;
+        };
+        
+    </script>
+</body>
+
+</html>
